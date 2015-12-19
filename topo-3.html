@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+    <meta charset="UTF-8">
+    <title>the test for network topology</title>
+    <script src="js/jquery.js" type="text/javascript"></script>
+    <script src="js/jtopo-0.4.8-min.js" type="text/javascript"></script>
+    <script src="js/toolbar.js" type="text/javascript"></script>
+    <script src="js/jquery.toolbar.js" type="text/javascript"></script>
+    <script src="js/jquery.snippet.min.js" type="text/javascript"></script>
+    <script src="js/site.js" type="text/javascript"></script>
+    <script src="js/func.js" type="text/javascript"></script>
+    <style type="text/css">
+        #contextmenu {
+            border: 1px solid #aaa;
+            border-bottom: 0;
+            background: #eee;
+            position: absolute;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: none;
+        }
+
+        #contextmenu li a {
+            display: block;
+            padding: 10px;
+            border-bottom: 1px solid #aaa;
+            cursor: pointer;
+        }
+
+        #contextmenu li a:hover {
+            background: #fff;
+        }
+        #linkmenu {
+            border: 1px solid #aaa;
+            border-bottom: 0;
+            background: #eee;
+            position: absolute;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: none;
+        }
+        #linkmenu li a {
+            display: block;
+            padding: 10px;
+            border-bottom: 1px solid #aaa;
+            cursor: pointer;
+        }
+
+        #linkmenu li a:hover {
+            background: #fff;
+        }
+    </style>
+    <script type="text/javascript">
+        $(document).ready(function() {
+
+            var canvas = document.getElementById('canvas');
+            canvas.height = window.innerHeight * 0.895;
+            canvas.width = window.innerWidth * 0.98;
+
+            var scene = new JTopo.Scene();
+            scene.background = './img/bg.jpg';
+            var stage = new JTopo.Stage(canvas);
+            stage.eagleEye.visible = true;
+            showJTopoToobar(stage);
+            var currentNode = null;
+            var endNode = null;
+            var tmpx = null;
+            var tmpy = null;
+
+            var jsonStr='[{"elementType":"node","x":546,"y":591,"id":1137,"Image":"undefined","text":"三牌楼校区","textPosition":"Middle_Center","level":undefined},{"elementType":"node","x":1932,"y":591,"id":2523,"Image":"undefined","text":"仙林校区","textPosition":"Middle_Center","level":undefined},{"elementType":"node","x":396,"y":20,"id":7920,"Image":"cloud.jpg","text":"CERNET","textPosition":"Middle_Center","level":1},{"elementType":"node","x":486,"y":20,"id":9720,"Image":"cloud.jpg","text":"chinaet","textPosition":"Middle_Center","level":1},{"elementType":"node","x":436,"y":80,"id":34880,"Image":"8000.jpg","text":"Cabletron\\n8000","textPosition":"Middle_Left","level":2},{"elementType":"link","nodeAid":7920,"nodeZid":34880,"text":"","fontColor":"0, 200, 255"},{"elementType":"link","nodeAid":9720,"nodeZid":34880,"text":"","fontColor":"0, 200, 255"},{"elementType":"node","x":436,"y":140,"id":61040,"Image":"ER16.jpg","text":"凯创ER16","textPosition":"Middle_Left","level":3},{"elementType":"node","x":1932,"y":140,"id":270480,"Image":"ER16.jpg","text":"凯创ER16","textPosition":"Middle_Left","level":3},{"elementType":"link","nodeAid":34880,"nodeZid":61040,"text":"","fontColor":"0, 200, 255"},{"elementType":"link","nodeAid":61040,"nodeZid":270480,"text":"万兆高速链路","fontColor":"255,0,0"},{"elementType":"node","x":296,"y":260,"id":76960,"Image":"ER16.jpg","text":"联想5950","textPosition":"Middle_Left","level":4},{"elementType":"node","x":386,"y":260,"id":100360,"Image":"5200.jpg","text":"HUAWEI\\n5200A","textPosition":"Bottom_Center","level":4},{"elementType":"node","x":776,"y":260,"id":201760,"Image":"中间.jpg","text":"","textPosition":"Bottom_Center","level":4},{"elementType":"node","x":1206,"y":260,"id":313560,"Image":"ER16.jpg","text":"ENTERASYSES科技楼","textPosition":"Bottom_Center","level":4},{"elementType":"link","nodeAid":61040,"nodeZid":76960,"text":"","fontColor":"0, 200, 255"},{"elementType":"link","nodeAid":61040,"nodeZid":100360,"text":"","fontColor":"0, 200, 255"},{"elementType":"link","nodeAid":61040,"nodeZid":201760,"text":"","fontColor":"0, 200, 255"},{"elementType":"link","nodeAid":61040,"nodeZid":313560,"text":"","fontColor":"0, 200, 255"},{"elementType":"node","x":1432,"y":260,"id":372320,"Image":"ER16.jpg","text":"凯创N7教1楼","textPosition":"Bottom_Center","level":4},{"elementType":"node","x":1622,"y":260,"id":421720,"Image":"ER16.jpg","text":"凯创N7教2楼","textPosition":"Bottom_Center","level":4},{"elementType":"node","x":1812,"y":260,"id":471120,"Image":"ER16.jpg","text":"凯创N7教3楼","textPosition":"Bottom_Center","level":4},{"elementType":"node","x":2002,"y":260,"id":520520,"Image":"ER16.jpg","text":"凯创N7教4楼","textPosition":"Bottom_Center","level":4},{"elementType":"node","x":2232,"y":260,"id":580320,"Image":"2948.jpg","text":"VH2402仙林网络中心","textPosition":"Bottom_Center","level":4},{"elementType":"node","x":2412,"y":260,"id":627120,"Image":"ER16.jpg","text":"凯创N7教5楼","textPosition":"Bottom_Center","level":4},{"elementType":"link","nodeAid":270480,"nodeZid":372320,"text":"","fontColor":"0, 200, 255"},{"elementType":"link","nodeAid":270480,"nodeZid":421720,"text":"","fontColor":"0, 200, 255"},{"elementType":"link","nodeAid":270480,"nodeZid":471120,"text":"","fontColor":"0, 200, 255"},{"elementType":"link","nodeAid":270480,"nodeZid":520520,"text":"","fontColor":"0, 200, 255"},{"elementType":"link","nodeAid":270480,"nodeZid":580320,"text":"","fontColor":"0, 200, 255"},{"elementType":"link","nodeAid":270480,"nodeZid":627120,"text":"","fontColor":"0, 200, 255"},{"elementType":"node","x":216,"y":380,"id":82080,"Image":"serve.jpg","text":"EMC存储","textPosition":"Bottom_Center","level":5},{"elementType":"node","x":296,"y":380,"id":112480,"Image":"2948.jpg","text":"VH4802","textPosition":"Bottom_Center","level":5},{"elementType":"link","nodeAid":76960,"nodeZid":82080,"text":"","fontColor":"0, 200, 255"},{"elementType":"link","nodeAid":76960,"nodeZid":112480,"text":"","fontColor":"0, 200, 255"},{"elementType":"node","x":386,"y":380,"id":146680,"Image":"cloud.jpg","text":"学生宿舍","textPosition":"Middle_Center","level":5},{"elementType":"link","nodeAid":100360,"nodeZid":146680,"text":"","fontColor":"0, 200, 255"},{"elementType":"node","x":476,"y":380,"id":180880,"Image":"2948.jpg","text":"CISCO\\n2948","textPosition":"Bottom_Center","level":5},{"elementType":"node","x":566,"y":380,"id":215080,"Image":"2948.jpg","text":"教学主楼\\nCISCO2960","textPosition":"Bottom_Center","level":5},{"elementType":"node","x":656,"y":380,"id":249280,"Image":"2948.jpg","text":"无线楼\\nVH2402","textPosition":"Bottom_Center","level":5},{"elementType":"node","x":746,"y":380,"id":283480,"Image":"2948.jpg","text":"有线楼\\nCISCO3542","textPosition":"Bottom_Center","level":5},{"elementType":"node","x":836,"y":380,"id":317680,"Image":"2948.jpg","text":"图书馆\\nCISCO2948","textPosition":"Bottom_Center","level":5},{"elementType":"node","x":926,"y":380,"id":351880,"Image":"2948.jpg","text":"IBM8260","textPosition":"Bottom_Center","level":5},{"elementType":"node","x":1016,"y":380,"id":386080,"Image":"2948.jpg","text":"办公北楼\\nIBM8271","textPosition":"Bottom_Center","level":5},{"elementType":"node","x":1106,"y":380,"id":420280,"Image":"2948.jpg","text":"办公南楼\\nIBM8271","textPosition":"Bottom_Center","level":5},{"elementType":"link","nodeAid":201760,"nodeZid":180880,"text":"","fontColor":"0, 200, 255"},{"elementType":"link","nodeAid":201760,"nodeZid":215080,"text":"","fontColor":"0, 200, 255"},{"elementType":"link","nodeAid":201760,"nodeZid":249280,"text":"","fontColor":"0, 200, 255"},{"elementType":"link","nodeAid":201760,"nodeZid":283480,"text":"","fontColor":"0, 200, 255"},{"elementType":"link","nodeAid":201760,"nodeZid":317680,"text":"","fontColor":"0, 200, 255"},{"elementType":"link","nodeAid":201760,"nodeZid":351880,"text":"","fontColor":"0, 200, 255"},{"elementType":"link","nodeAid":201760,"nodeZid":386080,"text":"","fontColor":"0, 200, 255"},{"elementType":"link","nodeAid":201760,"nodeZid":420280,"text":"","fontColor":"0, 200, 255"},{"elementType":"node","x":1206,"y":380,"id":458280,"Image":"2948.jpg","text":"VH2402","textPosition":"Bottom_Center","level":5},{"elementType":"node","x":1286,"y":380,"id":488680,"Image":"2948.jpg","text":"VH2402","textPosition":"Bottom_Center","level":5},{"elementType":"link","nodeAid":313560,"nodeZid":458280,"text":"","fontColor":"0, 200, 255"},{"elementType":"link","nodeAid":313560,"nodeZid":488680,"text":"","fontColor":"0, 200, 255"},{"elementType":"node","x":1372,"y":380,"id":521360,"Image":"2948.jpg","text":"VH2402","textPosition":"Bottom_Center","level":5},{"elementType":"node","x":1462,"y":380,"id":555560,"Image":"2948.jpg","text":"VH2402","textPosition":"Bottom_Center","level":5},{"elementType":"node","x":1552,"y":380,"id":589760,"Image":"2948.jpg","text":"VH2402","textPosition":"Bottom_Center","level":5},{"elementType":"node","x":1642,"y":380,"id":623960,"Image":"2948.jpg","text":"VH2402","textPosition":"Bottom_Center","level":5},{"elementType":"node","x":1732,"y":380,"id":658160,"Image":"2948.jpg","text":"VH2402","textPosition":"Bottom_Center","level":5},{"elementType":"node","x":1822,"y":380,"id":692360,"Image":"2948.jpg","text":"VH2402","textPosition":"Bottom_Center","level":5},{"elementType":"node","x":1912,"y":380,"id":726560,"Image":"2948.jpg","text":"VH2402","textPosition":"Bottom_Center","level":5},{"elementType":"node","x":2002,"y":380,"id":760760,"Image":"2948.jpg","text":"VH2402","textPosition":"Bottom_Center","level":5},{"elementType":"node","x":2232,"y":380,"id":848160,"Image":"cloud.jpg","text":"学生宿舍","textPosition":"Middle_Center","level":5},{"elementType":"node","x":2362,"y":380,"id":897560,"Image":"2948.jpg","text":"VH2402","textPosition":"Bottom_Center","level":5},{"elementType":"node","x":2462,"y":380,"id":935560,"Image":"2948.jpg","text":"VH2402","textPosition":"Bottom_Center","level":5},{"elementType":"link","nodeAid":372320,"nodeZid":521360,"text":"","fontColor":"0, 200, 255"},{"elementType":"link","nodeAid":372320,"nodeZid":555560,"text":"","fontColor":"0, 200, 255"},{"elementType":"link","nodeAid":421720,"nodeZid":589760,"text":"","fontColor":"0, 200, 255"},{"elementType":"link","nodeAid":421720,"nodeZid":623960,"text":"","fontColor":"0, 200, 255"},{"elementType":"link","nodeAid":471120,"nodeZid":658160,"text":"","fontColor":"0, 200, 255"},{"elementType":"link","nodeAid":471120,"nodeZid":692360,"text":"","fontColor":"0, 200, 255"},{"elementType":"link","nodeAid":520520,"nodeZid":726560,"text":"","fontColor":"0, 200, 255"},{"elementType":"link","nodeAid":520520,"nodeZid":760760,"text":"","fontColor":"0, 200, 255"},{"elementType":"link","nodeAid":580320,"nodeZid":848160,"text":"","fontColor":"0, 200, 255"},{"elementType":"link","nodeAid":627120,"nodeZid":897560,"text":"","fontColor":"0, 200, 255"},{"elementType":"link","nodeAid":627120,"nodeZid":935560,"text":"","fontColor":"0, 200, 255"},{"elementType":"node","x":476,"y":500,"id":238000,"Image":"serv.jpg","text":"VH2402","textPosition":"Bottom_Center","level":6},{"elementType":"link","nodeAid":180880,"nodeZid":238000,"text":"","fontColor":"0, 200, 255"},{"elementType":"node","x":296,"y":500,"id":148000,"Image":"serv.jpg","text":"VH2402","textPosition":"Bottom_Center","level":6},{"elementType":"link","nodeAid":112480,"nodeZid":148000,"text":"","fontColor":"0, 200, 255"},{"elementType":"node","x":746,"y":500,"id":373000,"Image":"2948.jpg","text":"有线楼\\nCISCO2948","textPosition":"Bottom_Center","level":6},{"elementType":"link","nodeAid":283480,"nodeZid":373000,"text":"","fontColor":"0, 200, 255"},{"elementType":"node","x":926,"y":500,"id":463000,"Image":"2948.jpg","text":"图书馆IBM8271","textPosition":"Bottom_Center","level":6},{"elementType":"link","nodeAid":351880,"nodeZid":463000,"text":"","fontColor":"0, 200, 255"}]';
+            var jsonObj = eval("("+jsonStr+")");
+            jsonObj.forEach(function(a){
+                if (a.text == "三牌楼校区"){
+                    AddTextNode(a.x, a.y, a.text,scene);
+                }else if (a.text == "仙林校区"){
+                    AddTextNode(a.x, a.y, a.text,scene);
+                }else if(a.elementType == "node"){
+                    if(a.level <= 3) {
+                        AddNode(a.x, a.y, a.text, a.Image, a.textPosition, a.level);
+                    }
+                }
+            })
+            jsonObj.forEach(function(a){
+                if(a.elementType == "link"){
+                    var nodeA = scene.findElements(function(e){return e.id == a.nodeAid;});
+                    var nodeZ = scene.findElements(function(e){return e.id == a.nodeZid;});
+                    if(nodeA[0] && nodeZ[0]) {
+                        Addlink(nodeA[0], nodeZ[0], a.text, a.fontColor);
+                    }
+                }
+            })
+
+            //画出拓扑图
+            function AddNode(x, y, str, img, textPosition,level)
+            {
+                var node = new JTopo.Node(str);
+                node.serializedProperties.push('id');
+                node.serializedProperties.push('level');
+                node.setLocation(x ,y);
+                node.Image = '';
+                node.id = x*y;
+                node.level = level;
+                if(null != img) {
+                    node.setImage('./img/' + img, false);
+                    node.Image = img;
+                }
+                node.textPosition = textPosition;
+                node.fontColor = '0,0,0';
+                node.setSize(80,40);
+                node.addEventListener('mouseup',function(event){
+                    handler(event,node);
+                });
+                node.addEventListener('click', function(event){
+                    endNode = node;
+                    if(null != currentNode && currentNode != endNode){
+                        Addlink(currentNode, endNode);
+                        currentNode = null;
+                    }
+                });
+                scene.add(node);
+                return node;
+            }
+            function Addlink(node1, node2, str, color)
+            {
+                var link = new JTopo.Link(node1, node2, str);
+                //node2.father = node1;
+                link.lineWidth = 3;//线宽
+                link.bundleOffset = 60;
+                link.bundleGap = 20;
+                link.textOffsetY = 3;
+                link.fontColor = color || '0, 200, 255';
+                link.strokeColor = color || '0, 200, 255';
+                link.addEventListener('mouseup',function(event){
+                    currentLink = this;
+                    handlelink(event);
+                });
+                link.addEventListener('dbclick', function(event){
+                    if(confirm('是否删除连线')){
+                        scene.remove(link);
+                    }
+                });
+                scene.add(link);
+            }
+
+            function AddTextNode(x, y, str, scene)
+            {
+                var node = new JTopo.Node(str);
+                node.setLocation(x, y);
+                node.serializedProperties.push('id');
+                node.id = x+y;
+                node.fillColor = '255,255,255';
+                node.textPosition = 'Middle_Center';
+                node.fontColor = '0,0,0';
+                node.setSize(120,30);
+                node.dragable = false;
+                node.showSelected = false;
+                node.selected = false;
+                scene.add(node);
+            }
+
+            function handler(event, obj){
+                $("#linkmenu").hide();
+                if(event.button == 2){
+                    currentNode = obj;
+                    tmpx = event.pageX + 30;
+                    tmpy = event.pageY + 30;
+                    $("#contextmenu").css({
+                        top:event.pageY,
+                        left:event.pageX
+                    }).show();
+                }
+            }
+
+            function handlelink(event){
+                $("#contextmenu").hide();
+                if(event.button == 2){
+                    $("#linkmenu").css({
+                        top:event.pageY,
+                        left:event.pageX
+                    }).show();
+                }
+            }
+
+            stage.click(function(event){
+                if(event.button == 0){// 右键
+                    // 关闭弹出菜单（div）
+                    $("#contextmenu").hide();
+                }
+            });
+            stage.click(function(event){
+                if(event.button == 0){// 右键
+                    $("#linkmenu").hide();
+                }
+            });
+
+            //右键菜单处理
+            $("#contextmenu a").click(function(){
+                var text = $(this).text();
+                if("取消" == text){
+                    $("#contextmenu").hide();
+                }if(text == '删除该节点'){
+                    scene.remove(currentNode);
+                    currentNode = null;
+                }if(text == '撤销上一次操作'){
+                    currentNode.restore();
+                }else{
+                    currentNode.save();
+                }
+                if(text == '添加连线'){
+
+                }else if(text == '添加节点'){
+                    AddNode(tmpx, tmpy, '新建节点', currentNode.Image, 'Bottom_Center');
+                }else if(text == '顺时针旋转'){
+                    currentNode.rotate += 0.5;
+                }else if(text == '逆时针旋转'){
+                    currentNode.rotate -= 0.5;
+                }else if(text == '放大'){
+                    currentNode.scaleX += 0.2;
+                    currentNode.scaleY += 0.2;
+                }else if(text == '缩小'){
+                    currentNode.scaleX -= 0.2;
+                    currentNode.scaleY -= 0.2;
+                }else if(text == '警告')
+                {
+                    if(currentNode.alarm == null) {
+                        currentNode.alarm = '2W';
+                    }else
+                    {
+                        currentNode.alarm = null;
+                    }
+
+                }
+                $("#contextmenu").hide();
+            });
+            $("#linkmenu a").click(function(){
+                var text = $(this).text();
+                if("取消" == text){
+                    $("#linkmenu").hide();
+                }
+                if(text == '修改颜色(随机)'){
+                    //currentLink.fillColor = JTopo.util.randomColor();
+                    currentLink.strokeColor = JTopo.util.randomColor();
+                }else if(text == '改为红色')
+                {
+                    currentLink.strokeColor = '255,0,0';
+                }else if(text == '改为普通颜色')
+                {
+                    currentLink.strokeColor =  '0,200,255';
+                }else if(text == '删除连线')
+                {
+                    scene.remove(currentLink);
+                }else if(text == '警告')
+                {
+                    currentLink.alarm = '2W';
+                }
+                $("#linkmenu").hide();
+            });
+
+            //修改文字
+            var textfield = $("#jtopo_textfield");
+            scene.dbclick(function(event){
+                if(event.target == null) return;
+                var e = event.target;
+                textfield.css({
+                    top: event.pageY,
+                    left:event.pageX - e.width/2
+                }).show().attr('value', e.text).focus().select();
+                e.text = "";
+                textfield[0].JTopoNode = e;
+            });
+            $("#jtopo_textfield").blur(function(){
+                textfield[0].JTopoNode.text = textfield.hide().val();
+            });
+            stage.add(scene);
+            var jsonstr = tJson(scene);
+            console.log(jsonstr);
+
+            function tJson(a){
+                var d="[";
+                //d+='"scene":[';
+                for(var e=0;e< a.childs.length;e++){
+                    var f= a.childs[e];
+                    d+="{";
+                    if(f.elementType == 'node')
+                    {
+                        d += "\"elementType\":"+ '"'+f.elementType+'"';
+                        d += ",\"x\":"+ f.x;
+                        d += ",\"y\":"+ f.y;
+                        d += ",\"id\":"+ f.id;
+                        d += ",\"Image\":"+ '"'+ f.Image+ '"';
+                        d += ",\"text\":"+ '"'+ f.text+ '"';
+                        d +=",\"textPosition\":"+ '"'+ f.textPosition+ '"';
+                    }else if(f.elementType == 'link'){
+                        d += "\"elementType\":"+ '"'+ f.elementType+ '"';
+                        d += ",\"nodeAid\":"+ f.nodeA.id;
+                        d += ",\"nodeZid\":"+ f.nodeZ.id;
+                        d += ",\"text\":"+ '"'+ f.text+ '"';
+                        d +=",\"fontColor\":"+ '"'+ f.fontColor+ '"';
+                    }
+                    d+="},"
+                }
+                d= d.substring(0, d.length-1);
+                return d+="]";
+            }
+        });
+    </script>
+<body>
+
+<textarea id="jtopo_textfield" style="display:none;width: 60px;position: absolute;" onkeydown="if(event.keyCode==13)this.blur();"></textarea>
+
+<div class="right">
+    <div id="content">
+        <canvas id="canvas">sorry,your browser do not support canvas label</canvas>
+    </div>
+</div>
+
+<ul id="contextmenu" style="display:none;">
+    <li><a>添加连线</a></li>
+    <li><a>添加节点</a></li>
+    <li><a>顺时针旋转</a></li>
+    <li><a>逆时针旋转</a></li>
+    <li><a>放大</a></li>
+    <li><a>缩小</a></li>
+    <li><a>撤销上一次操作</a></li>
+    <li><a>删除该节点</a></li>
+    <li><a>警告</a></li>
+    <li><a>取消</a></li>
+</ul>
+<ul id="linkmenu" style="display:none;">
+    <li><a>修改颜色(随机)</a></li>
+    <li><a>改为红色</a></li>
+    <li><a>改为普通颜色</a></li>
+    <li><a>删除连线</a></li>
+    <li><a>警告</a></li>
+    <li><a>取消</a></li>
+</ul>
+</body>
+</html>

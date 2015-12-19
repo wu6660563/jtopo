@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+    <meta charset="UTF-8">
+    <title>the test for network topology</title>
+    <script src="js/jquery.js" type="text/javascript"></script>
+    <script src="js/jtopo-0.4.8-min.js" type="text/javascript"></script>
+    <script src="js/toolbar.js" type="text/javascript"></script>
+    <script src="js/jquery.toolbar.js" type="text/javascript"></script>
+    <script src="js/jquery.snippet.min.js" type="text/javascript"></script>
+    <script src="js/site.js" type="text/javascript"></script>
+    <script src="js/func.js" type="text/javascript"></script>
+    <style type="text/css">
+        #contextmenu {
+            border: 1px solid #aaa;
+            border-bottom: 0;
+            background: #eee;
+            position: absolute;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: none;
+        }
+
+        #contextmenu li a {
+            display: block;
+            padding: 10px;
+            border-bottom: 1px solid #aaa;
+            cursor: pointer;
+        }
+
+        #contextmenu li a:hover {
+            background: #fff;
+        }
+        #linkmenu {
+            border: 1px solid #aaa;
+            border-bottom: 0;
+            background: #eee;
+            position: absolute;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: none;
+        }
+        #linkmenu li a {
+            display: block;
+            padding: 10px;
+            border-bottom: 1px solid #aaa;
+            cursor: pointer;
+        }
+
+        #linkmenu li a:hover {
+            background: #fff;
+        }
+    </style>
+    <script type="text/javascript">
+        $(document).ready(function() {
+
+            var canvas = document.getElementById('canvas');
+            canvas.height = window.innerHeight * 0.895;
+            canvas.width = window.innerWidth * 0.98;
+
+            var scene = new JTopo.Scene();
+            scene.background = './img/bg.jpg';
+            var stage = new JTopo.Stage(canvas);
+            stage.eagleEye.visible = true;
+            showJTopoToobar(stage);
+            var currentNode = null;
+            var endNode = null;
+            var tmpx = null;
+            var tmpy = null;
+
+            //下标标明三牌楼校区和仙林校区
+            var x = canvas.width/3;
+            var y = canvas.height - 40;
+            AddTextNode(x + 100, 591, '三牌楼校区',scene);
+            AddTextNode(x * 2 + 80 + 960, 591,  '仙林校区',scene);
+
+
+
+            //画出拓扑图
+            function AddNode(x, y, str, img, textPosition,level)
+            {
+                var node = new JTopo.Node(str);
+                node.serializedProperties.push('id');
+                node.serializedProperties.push('level');
+                node.setLocation(x ,y);
+                node.Image = '';
+                node.id = x*y;
+                node.level = level;
+                if(null != img) {
+                    node.setImage('./img/' + img, false);
+                    node.Image = img;
+                }
+                node.textPosition = textPosition;
+                node.fontColor = '0,0,0';
+                node.setSize(80,40);
+                node.addEventListener('mouseup',function(event){
+                    handler(event,node);
+                });
+                node.addEventListener('click', function(event){
+                    endNode = node;
+                    if(null != currentNode && currentNode != endNode){
+                        Addlink(currentNode, endNode);
+                        currentNode = null;
+                    }
+                });
+                scene.add(node);
+                return node;
+            }
+            function Addlink(node1, node2, str, color)
+            {
+                var link = new JTopo.Link(node1, node2, str);
+                //node2.father = node1;
+                link.lineWidth = 3;//线宽
+                link.bundleOffset = 60;
+                link.bundleGap = 20;
+                link.textOffsetY = 3;
+                link.fontColor = color || '0, 200, 255';
+                link.strokeColor = color || '0, 200, 255';
+                link.addEventListener('mouseup',function(event){
+                    currentLink = this;
+                    handlelink(event);
+                });
+                link.addEventListener('dbclick', function(event){
+                    if(confirm('是否删除连线')){
+                        scene.remove(link);
+                    }
+                });
+                scene.add(link);
+            }
+
+
+            function AddTextNode(x, y, str, scene)
+            {
+                var node = new JTopo.Node(str);
+                node.setLocation(x, y);
+                node.serializedProperties.push('id');
+                node.id = x+y;
+                node.fillColor = '255,255,255';
+                node.textPosition = 'Middle_Center';
+                node.fontColor = '0,0,0';
+                node.setSize(120,30);
+                node.dragable = false;
+                node.showSelected = false;
+                node.selected = false;
+                scene.add(node);
+            }
+
+            function handler(event, obj){
+                $("#linkmenu").hide();
+                if(event.button == 2){
+                    currentNode = obj;
+                    tmpx = event.pageX + 30;
+                    tmpy = event.pageY + 30;
+                    $("#contextmenu").css({
+                        top:event.pageY,
+                        left:event.pageX
+                    }).show();
+                }
+            }
+
+            function handlelink(event){
+                $("#contextmenu").hide();
+                if(event.button == 2){
+                    $("#linkmenu").css({
+                        top:event.pageY,
+                        left:event.pageX
+                    }).show();
+                }
+            }
+
+
+            var nodes = [];
+            x = canvas.width/3;
+            y = 20;
+
+            var Route1 = [];
+            var Route2 = [];
+            //第一二层
+            var s11 = AddNode(x - 50, y, 'CERNET','cloud.jpg','Middle_Center',1);
+            s11.nodeid = 's11';
+            var s12 = AddNode(x + 40, y , 'chinaet', 'cloud.jpg', 'Middle_Center',1);
+            s12.nodeid = 's12';
+            var s21 = AddNode(x - 10, y + 60, 'Cabletron8000','8000.jpg','Middle_Left',2);
+            s21.nodeid = 's21';
+            Addlink(s11, s21, '');
+            Addlink(s12, s21, '');
+            Route1.push(s11);
+            Route1.push(s12);
+            Route2.push(s21);
+
+            y = y + 120;
+            var Route3 = [];
+            //第三层
+            var s31 = AddNode(x - 10, y, '凯创ER16', 'ER16.jpg', 'Middle_Left',3);
+            var s32 = AddNode(x * 2 + 80 + 960, y, '凯创ER16', 'ER16.jpg', 'Middle_Left',3);
+            s31.nodeid = 's31';
+            s32.nodeid = 's32';
+            Addlink(s21, s31, '');
+            Addlink(s31, s32, '万兆高速链路', '255,0,0');
+            Route3.push(s31);
+            Route3.push(s32);
+
+            y = y + 120;
+            var Route4 = [];
+            //第四层
+            var s41 = AddNode(x - 150, y, '联想5950','ER16.jpg',  'Middle_Left',4);
+            var s42 = AddNode(x - 60, y, 'HUAWEI5200A','5200.jpg',  'Bottom_Center',4);
+            var s43 = AddNode(x + 30 + 300, y, '','中间.jpg',  'Bottom_Center',4);
+            var s44 = AddNode(x + 200 + 560, y, 'ENTERASYSES科技楼','ER16.jpg',  'Bottom_Center',4);
+            Addlink(s31, s41, '');
+            Addlink(s31, s42, '');
+            Addlink(s31, s43, '');
+            Addlink(s31, s44, '');
+            Route4.push(s41);
+            Route4.push(s42);
+            Route4.push(s43);
+            Route4.push(s44);
+            var s45 = AddNode(x * 2 - 120 + 660, y, '凯创N7教1楼','ER16.jpg',  'Bottom_Center',4);
+            var s46 = AddNode(x * 2 - 30 + 660 + 100, y, '凯创N7教2楼','ER16.jpg',  'Bottom_Center',4);
+            var s47 = AddNode(x * 2 + 60 + 660 + 200, y, '凯创N7教3楼','ER16.jpg',  'Bottom_Center',4);
+            var s48 = AddNode(x * 2 + 150 + 660 + 300, y, '凯创N7教4楼','ER16.jpg',  'Bottom_Center',4);
+            var s49 = AddNode(x * 2 + 280 + 660 + 400, y, 'VH2402仙林网络中心','2948.jpg',  'Bottom_Center',4);
+            var s410 = AddNode(x * 2 + 360 + 660 + 500, y, '凯创N7教5楼','ER16.jpg',  'Bottom_Center',4);
+            Addlink(s32, s45, '');
+            Addlink(s32, s46, '');
+            Addlink(s32, s47, '');
+            Addlink(s32, s48, '');
+            Addlink(s32, s49, '');
+            Addlink(s32, s410, '');
+            Route4.push(s45);
+            Route4.push(s46);
+            Route4.push(s47);
+            Route4.push(s48);
+            Route4.push(s49);
+            Route4.push(s410);
+
+            y = y + 120;
+            var Route5 = [];
+            //第五层
+            var s51 = AddNode(x - 230, y, 'EMC存储','serve.jpg',  'Bottom_Center',5);
+            var s524 = AddNode(x - 150, y, 'VH4802','2948.jpg',  'Bottom_Center',5);
+            Addlink(s41, s51, '');
+            Addlink(s41, s524, '');
+            Route5.push(s51);
+            Route5.push(s524);
+            var s52 = AddNode(x - 60, y, '学生宿舍','cloud.jpg',  'Middle_Center',5);
+            Addlink(s42, s52, '');
+            Route5.push(s52);
+            var s53 = AddNode(x + 30, y, 'CISCO2948','2948.jpg',  'Bottom_Center',5);
+            var s54 = AddNode(x + 120, y, "教学主楼\nCISCO2960",'2948.jpg',  'Bottom_Center',5);
+            var s55 = AddNode(x + 210, y, '无线楼VH2402','2948.jpg',  'Bottom_Center',5);
+            var s56 = AddNode(x + 300, y, '有线楼CISCO3542','2948.jpg',  'Bottom_Center',5);
+            var s57 = AddNode(x + 390, y, '图书馆CISCO2948','2948.jpg',  'Bottom_Center',5);
+            var s58 = AddNode(x + 480, y, 'IBM8260','2948.jpg',  'Bottom_Center',5);
+            var s59 = AddNode(x + 570, y, '办公北楼IBM8271','2948.jpg',  'Bottom_Center',5);
+            var s510 = AddNode(x + 660, y, '办公南楼IBM8271','2948.jpg',  'Bottom_Center',5);
+            Addlink(s43, s53, '');
+            Addlink(s43, s54, '');
+            Addlink(s43, s55, '');
+            Addlink(s43, s56, '');
+            Addlink(s43, s57, '');
+            Addlink(s43, s58, '');
+            Addlink(s43, s59, '');
+            Addlink(s43, s510, '');
+            Route5.push(s53);
+            Route5.push(s54);
+            Route5.push(s55);
+            Route5.push(s56);
+            Route5.push(s57);
+            Route5.push(s58);
+            Route5.push(s59);
+            Route5.push(s510);
+            var s511 = AddNode(x + 760, y, 'VH2402','2948.jpg',  'Bottom_Center',5);
+            var s512 = AddNode(x + 840, y, 'VH2402','2948.jpg',  'Bottom_Center',5);
+            Addlink(s44, s511, '');
+            Addlink(s44, s512, '');
+            Route5.push(s511);
+            Route5.push(s512);
+            var s513 = AddNode(x * 2 - 120 + 600, y, 'VH2402','2948.jpg',  'Bottom_Center',5);
+            var s514 = AddNode(x * 2 - 120 + 690, y, 'VH2402','2948.jpg',  'Bottom_Center',5);
+            var s515 = AddNode(x * 2 - 120 + 780, y, 'VH2402','2948.jpg',  'Bottom_Center',5);
+            var s516 = AddNode(x * 2 - 120 + 870, y, 'VH2402','2948.jpg',  'Bottom_Center',5);
+            var s517 = AddNode(x * 2 - 120 + 960, y, 'VH2402','2948.jpg',  'Bottom_Center',5);
+            var s518 = AddNode(x * 2 - 120 + 1050, y, 'VH2402','2948.jpg',  'Bottom_Center',5);
+            var s519 = AddNode(x * 2 - 120 + 1140, y, 'VH2402','2948.jpg',  'Bottom_Center',5);
+            var s520 = AddNode(x * 2 - 120 + 1230, y, 'VH2402','2948.jpg',  'Bottom_Center',5);
+            var s521 = AddNode(x * 2 + 280 + 660 + 400, y, '学生宿舍','cloud.jpg',  'Middle_Center',5);
+            var s522 = AddNode(x * 2 + 360 + 660 + 450, y, 'VH2402','2948.jpg',  'Bottom_Center',5);
+            var s523 = AddNode(x * 2 + 360 + 660 + 550, y, 'VH2402','2948.jpg',  'Bottom_Center',5);
+            Addlink(s45, s513, '');
+            Addlink(s45, s514, '');
+            Addlink(s46, s515, '');
+            Addlink(s46, s516, '');
+            Addlink(s47, s517, '');
+            Addlink(s47, s518, '');
+            Addlink(s48, s519, '');
+            Addlink(s48, s520, '');
+            Addlink(s49, s521, '');
+            Addlink(s410, s522, '');
+            Addlink(s410, s523, '');
+            for(i = 3; i < 10; i++)
+            {
+                Route5.push(s51 + 'i');
+            }
+            Route5.push(s520);
+            Route5.push(s521);
+            Route5.push(s522);
+            Route5.push(s523);
+
+            y = y + 120;
+            var Route6 = [];
+            //第六层
+            var s61 = AddNode(x + 30, y, 'VH2402','serv.jpg',  'Bottom_Center',6);
+            Addlink(s53, s61, '');
+            var s62 = AddNode(x - 150, y, 'VH2402','serv.jpg',  'Bottom_Center',6);
+            Addlink(s524, s62, '');
+            var s63 = AddNode(x + 300, y, '有线楼CISCO2948','2948.jpg',  'Bottom_Center',6);
+            Addlink(s56, s63, '');
+            var s64 = AddNode(x + 480, y, '图书馆IBM8271','2948.jpg',  'Bottom_Center',6);
+            Addlink(s58, s64, '');
+            Route6.push(s61);
+            Route6.push(s62);
+            Route6.push(s63);
+            Route6.push(s64);
+
+            stage.click(function(event){
+                if(event.button == 0){// 右键
+                    // 关闭弹出菜单（div）
+                    $("#contextmenu").hide();
+                }
+            });
+            stage.click(function(event){
+                if(event.button == 0){// 右键
+                    $("#linkmenu").hide();
+                }
+            });
+
+            //右键菜单处理
+            $("#contextmenu a").click(function(){
+                var text = $(this).text();
+                if("取消" == text){
+                    $("#contextmenu").hide();
+                }if(text == '删除该节点'){
+                    scene.remove(currentNode);
+                    currentNode = null;
+                }if(text == '撤销上一次操作'){
+                    currentNode.restore();
+                }else{
+                    currentNode.save();
+                }
+                if(text == '添加连线'){
+
+                }else if(text == '添加节点'){
+                    AddNode(tmpx, tmpy, '新建节点', currentNode.Image, currentNode.textPosition);
+                }else if(text == '顺时针旋转'){
+                    currentNode.rotate += 0.5;
+                }else if(text == '逆时针旋转'){
+                    currentNode.rotate -= 0.5;
+                }else if(text == '放大'){
+                    currentNode.scaleX += 0.2;
+                    currentNode.scaleY += 0.2;
+                }else if(text == '缩小'){
+                    currentNode.scaleX -= 0.2;
+                    currentNode.scaleY -= 0.2;
+                }else if(text == '警告')
+                {
+                    if(currentNode.alarm == null) {
+                        currentNode.alarm = '2W';
+                    }else
+                    {
+                        currentNode.alarm = null;
+                    }
+
+                }
+                $("#contextmenu").hide();
+            });
+            $("#linkmenu a").click(function(){
+                var text = $(this).text();
+                if("取消" == text){
+                    $("#linkmenu").hide();
+                }
+                if(text == '修改颜色(随机)'){
+                    //currentLink.fillColor = JTopo.util.randomColor();
+                    currentLink.strokeColor = JTopo.util.randomColor();
+                }else if(text == '改为红色')
+                {
+                    currentLink.strokeColor = '255,0,0';
+                }else if(text == '改为普通颜色')
+                {
+                    currentLink.strokeColor =  '0,200,255';
+                }else if(text == '删除连线')
+                {
+                    scene.remove(currentLink);
+                }else if(text == '警告')
+                {
+                    currentLink.alarm = '2W';
+                }
+                $("#linkmenu").hide();
+            });
+
+            //修改文字
+            var textfield = $("#jtopo_textfield");
+            scene.dbclick(function(event){
+                if(event.target == null) return;
+                var e = event.target;
+                textfield.css({
+                    top: event.pageY,
+                    left:event.pageX - e.width/2
+                }).show().attr('value', e.text).focus().select();
+                e.text = "";
+                textfield[0].JTopoNode = e;
+            });
+            $("#jtopo_textfield").blur(function(){
+                textfield[0].JTopoNode.text = textfield.hide().val();
+            });
+            stage.add(scene);
+            var jsonstr = tJson(scene);
+            console.log(jsonstr);
+
+            function tJson(a){
+                var d="[";
+                for(var e=0;e< a.childs.length;e++){
+                    var f= a.childs[e];
+                    d+="{";
+                    if(f.elementType == 'node')
+                    {
+                        d += "\"elementType\":"+ '"'+f.elementType+'"';
+                        d += ",\"x\":"+ f.x;
+                        d += ",\"y\":"+ f.y;
+                        d += ",\"id\":"+ f.id;
+                        d += ",\"Image\":"+ '"'+ f.Image+ '"';
+                        d += ",\"text\":"+ '"'+ f.text+ '"';
+                        d +=",\"textPosition\":"+ '"'+ f.textPosition+ '"';
+                        d +=',"level":'+ f.level;
+                    }else if(f.elementType == 'link'){
+                        d += "\"elementType\":"+ '"'+ f.elementType+ '"';
+                        d += ",\"nodeAid\":"+ f.nodeA.id;
+                        d += ",\"nodeZid\":"+ f.nodeZ.id;
+                        d += ",\"text\":"+ '"'+ f.text+ '"';
+                        d +=",\"fontColor\":"+ '"'+ f.fontColor+ '"';
+                    }
+                    d+="},"
+                }
+                d= d.substring(0, d.length-1);
+                return d+="]";
+            }
+        });
+    </script>
+<body>
+
+<textarea id="jtopo_textfield" style="display:none;width: 60px;position: absolute;" onkeydown="if(event.keyCode==13)this.blur();"></textarea>
+
+<div class="right">
+    <div id="content">
+        <canvas id="canvas">sorry,your browser do not support canvas label</canvas>
+    </div>
+</div>
+
+<ul id="contextmenu" style="display:none;">
+    <li><a>添加连线</a></li>
+    <li><a>添加节点</a></li>
+    <li><a>顺时针旋转</a></li>
+    <li><a>逆时针旋转</a></li>
+    <li><a>放大</a></li>
+    <li><a>缩小</a></li>
+    <li><a>撤销上一次操作</a></li>
+    <li><a>删除该节点</a></li>
+    <li><a>警告</a></li>
+    <li><a>取消</a></li>
+</ul>
+<ul id="linkmenu" style="display:none;">
+    <li><a>修改颜色(随机)</a></li>
+    <li><a>改为红色</a></li>
+    <li><a>改为普通颜色</a></li>
+    <li><a>删除连线</a></li>
+    <li><a>警告</a></li>
+    <li><a>取消</a></li>
+</ul>
+</body>
+</html>

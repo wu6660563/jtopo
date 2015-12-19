@@ -1,0 +1,157 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title> 南邮网络拓朴图</title>
+    <link rel="stylesheet" type="text/css" href="./js/easyui.css">
+    <link rel="stylesheet" type="text/css" href="./js/icon.css">
+    <link rel="stylesheet" type="text/css" href="./js/demo.css">
+    <script type="text/javascript" src="./js/jquery.min.js"></script>
+    <script type="text/javascript" src="./js/jquery.easyui.min.js"></script>
+    <script src="js/jquery.easyui.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="js/jtopo-0.4.8-min.js"></script>
+    <style type="text/css">
+        html,body{
+            overflow:hidden;
+            height:100%;
+            margin:0;
+            padding:0;
+            font:14px/1.8 Georgia, Arial, Simsun;
+        }
+        html{
+            _padding:110px 0;
+        }
+        #hd{
+            position:absolute;
+            top:0;
+            left:0;
+            width:100%;
+            height:3%;
+            background:#999;
+        }
+        #bd{
+            position:absolute;
+            top:3.1%;
+            right:0;
+            bottom:3.1%;
+            left:0;
+            overflow:hidden;
+            width:100%;
+            _height:100%;
+        }
+        #side{
+            position:absolute;
+            top:0;
+            left:0;
+            bottom:0;
+            overflow:hidden;
+            width:13%;
+            _height:100%;
+            background:#666;
+        }
+        #main{
+            position:absolute;
+            _position:static;
+            top:0;
+            right:0;
+            bottom:0;
+            left:13.1%;
+            overflow:hidden;
+            _overflow:hidden;
+            _height:100%;
+            _margin-left:210px;
+            background:#666;
+        }
+        #content{
+            _overflow:auto;
+            _width:100%;
+            _height:100%;
+        }
+        #ft{
+            position:absolute;
+            bottom:0;
+            left:0;
+            width:100%;
+            height:3%;
+            background:#999;
+        }
+        /* 与布局无关，一些说明性内容样式 */
+        .tit-layout{margin:0.1% 0 0;font-size:15px;text-align:center;}
+        .copyright{font-weight:bold;text-align:center;}
+        #feature{width:200%;line-height:4;}
+        #feature .hd{padding:20px 15px;}
+        #feature .hd h2{margin:0;font-size:16px;}
+        #feature .bd ol{margin-top:0;}
+        #feature .bd h3{margin:0;padding:0 15px;font-size:14px;}
+        #feature .ft{padding:10px 15px 30px;}
+    </style>
+
+</head>
+<body>
+<script type="text/javascript">
+    $(function(){
+        $('#tt').tree({
+            onClick:function(node){
+                $("#main iframe").attr("src",node.id);
+            }
+        });
+    });
+</script>
+<div id="hd">
+    <h1 class="tit-layout">南邮本部+仙林网络拓朴图</h1>
+</div>
+<div id="bd">
+    <div id="side">
+        <div style="margin:20px 0;"></div>
+        <div class="easyui-panel" style="padding:5px">
+            <ul id = "tt" class="easyui-tree">
+                <li id = "topo-all.html">
+                    <span>网络拓朴</span>
+                    <ul>
+                        <li id = "topo-1.html" data-options="state:'closed'">
+                            <span>一级路由</span>
+                            <ul>
+                                <li id = "topo-2.html">
+                                    <span>二级路由</span>
+                                    <ul>
+                                        <li id = "topo-3.html">
+                                            <span>三级路由</span>
+                                            <ul>
+                                                <li id = "topo-4.html">
+                                                    <span>四级路由</span>
+                                                    <ul>
+                                                        <li id = "topo-5.html">
+                                                            <span>五级交换机</span>
+                                                            <ul>
+                                                                <li id = "topo-6.html">六级交换机</li>
+                                                            </ul>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+
+
+
+
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="main">
+        <iframe src = 'topo-all.html' height = 100% width = 100%></iframe>
+    </div>
+</div>
+
+<div id="ft">
+    <address class="copyright">Copyright &copy; <a href="http://blog.doyoe.com/">yingqin678</a></address>
+</div>
+
+</body>
+</html>
