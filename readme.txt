@@ -1,8 +1,5 @@
-1.×ó²àÀ¸Ê¹ÓÃeasyuiÊµÏÖµÄ£¬¿ÉÒÔ²é¿´²»Í¬²ã´ÎµÄÂ·ÓÉ£¬Ä¬ÈÏ´ò¿ªµÄÊÇÍøÂçÍØÆÓÍêÕûÒ³Ãæ£¬Ò²ÊÇ×îÍêÉÆµÄÒ»¸öÒ³Ãæ
-2.ÍØÆÓÍ¼ÉÏÃæµÄ°´Å¥ÊÇ¿ÉÒÔ½«¸ü¸ÄµÄÍØÆÓÍ¼µÄjsonÊý¾Ý¼°Ê±ÔÚconsoleÖÐ´òÓ¡³öÀ´£¬IEÏÂÖ§³ÖÁí´æÎª¹¦ÄÜ
-3.Ê¹ÓÃµÄjsonÊý¾ÝÊÇÍ¨¹ý×Ô¼ºÐ´µÄÐòÁÐ»¯ºÍ·´ÐòÁÐ»¯function½øÐÐ¹¹ÔìµÄ
-4.node½ÚµãºÍlink½Úµã¾ù¾ßÓÐÓÒ¼ü²Ëµ¥µÄ¹¦ÄÜ£¬Ê¹ÓÃÁËcss£¬Õâ²¿·ÖÊÇdemoÖÐ²Î¿¼£¬×Ô¼º²»»á
-5.Ë«»÷½Úµã»òlink¿ÉÒÔÐÞ¸ÄtextÄÚÈÝ£¬ÆäÖÐlinkË«»÷¿ÉÒÔ¿ìËÙÉ¾³ý½Úµã
-
-
-´óÉñÂÔ¹ý£¬½öÎª±ÏÉè¶ø×ö£¬¹¦ÄÜ¼òµ¥£¬¶ÔÓÚÏñÎÒ¸Õ¿ªÊ¼Ò»ÑùÎ´½Ó´¥¹ýjs¡¢css¡¢¶ÔHTML5²»ÊìµÄÐ¡°×¿ÉÒÔ²Î¿¼Ò»ÏÂ£¬´ËÎª±ÏÉèÖÕ½á°æ£¬
+1.å·¦ä¾§æ ä½¿ç”¨easyuiå®žçŽ°çš„ï¼Œå¯ä»¥æŸ¥çœ‹ä¸åŒå±‚æ¬¡çš„è·¯ç”±ï¼Œé»˜è®¤æ‰“å¼€çš„æ˜¯ç½‘ç»œæ‹“æœ´å®Œæ•´é¡µé¢ï¼Œä¹Ÿæ˜¯æœ€å®Œå–„çš„ä¸€ä¸ªé¡µé¢
+2.æ‹“æœ´å›¾ä¸Šé¢çš„æŒ‰é’®æ˜¯å¯ä»¥å°†æ›´æ”¹çš„æ‹“æœ´å›¾çš„jsonæ•°æ®åŠæ—¶åœ¨consoleä¸­æ‰“å°å‡ºæ¥ï¼ŒIEä¸‹æ”¯æŒå¦å­˜ä¸ºåŠŸèƒ½
+3.ä½¿ç”¨çš„jsonæ•°æ®æ˜¯é€šè¿‡è‡ªå·±å†™çš„åºåˆ—åŒ–å’Œååºåˆ—åŒ–functionè¿›è¡Œæž„é€ çš„
+4.nodeèŠ‚ç‚¹å’ŒlinkèŠ‚ç‚¹å‡å…·æœ‰å³é”®èœå•çš„åŠŸèƒ½ï¼Œä½¿ç”¨äº†cssï¼Œè¿™éƒ¨åˆ†æ˜¯demoä¸­å‚è€ƒï¼Œè‡ªå·±ä¸ä¼š
+5.åŒå‡»èŠ‚ç‚¹æˆ–linkå¯ä»¥ä¿®æ”¹textå†…å®¹ï¼Œå…¶ä¸­linkåŒå‡»å¯ä»¥å¿«é€Ÿåˆ é™¤èŠ‚ç‚¹
